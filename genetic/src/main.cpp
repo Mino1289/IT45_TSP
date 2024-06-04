@@ -23,13 +23,13 @@ int main(int argc, char** argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	int nb_generation = 100000;
+	int nb_generation = 1000;
 	int taille_population = 150;
 	float taux_croisement = 1;
 	float taux_mutation = 1;
-	int taille_chromosome = 50;
+	int taille_chromosome = 10;
 	char fileDistances[100];
-	strcpy(fileDistances, "data/distances_entre_villes_50.txt");
+	strcpy(fileDistances, "data/distances_entre_villes_10.txt");
 
 	// 10 villes: nbgen = 5000; taille_pop = 100;
 	// 50 villes: nbgen = 25000; taille_pop = 100;
