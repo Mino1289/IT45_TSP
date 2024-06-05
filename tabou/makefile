@@ -72,12 +72,12 @@ OBJ= \
 # sont � jour (les recompiler dans le cas contraire) puis lancer
 # la commande de linkage.
 bin/tp4-tabu-search : $(OBJ) 
-	$(COMPILO) -o bin/tp4-tabu-search $(OBJ) $(LIBS_PATH) $(LIBS)
+	$(COMPILO) -o tp4-tabu-search $(OBJ) $(LIBS_PATH) $(LIBS)
 
 # Taper 'make clean' provoque l'effacement de tous les .o, et des *~ laiss�s 
 # par emacs. Il n'y a pas de d�pendence pour cette cible.
 clean : 
-	rm -f obj/* bin/*
+	rm -f obj/* 
 
 # Taper 'make clear' fait un 'make clean' puis efface en plus l'ex�cutable.
 clear : 
