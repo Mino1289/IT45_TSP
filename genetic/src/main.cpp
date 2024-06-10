@@ -23,13 +23,13 @@ int main(int argc, char** argv)
 	Random::randomize();
 
 	// valeurs par defaut
-	int nb_generation = 1000;
-	int taille_population = 150;
+	int nb_generation = 1000000;
+	int taille_population = 300;
 	float taux_croisement = 1;
 	float taux_mutation = 1;
-	int taille_chromosome = 10;
+	int taille_chromosome = 280;
 	char fileDistances[100];
-	strcpy(fileDistances, "data/distances_entre_villes_10.txt");
+	strcpy(fileDistances, "data/distances_entre_villes_280.txt");
 
 	// 10 villes: nbgen = 5000; taille_pop = 100;
 	// 50 villes: nbgen = 25000; taille_pop = 100;
@@ -55,6 +55,7 @@ int main(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
+	time_t debut = time(NULL);
 	// initialise l'algorithme �volutionniste
 	Ae algo(nb_generation, taille_population, taux_croisement, taux_mutation, taille_chromosome, fileDistances);
 	// arguments du constructeur de l'objet Ae
@@ -67,8 +68,10 @@ int main(int argc, char** argv)
 
 	// lance l'algorithme �volutionniste
 	chromosome* best = algo.optimiser();
-
+	time_t fin = time(NULL);
 	// affiche la fitness du meilleur individu trouv�
 	cout << "La meilleure solution trouvee est : ";
 	best->afficher();
+
+	cout << "Durée de l'execution : " << fin - debut << " secondes" << endl;
 }

@@ -55,12 +55,11 @@ chromosome* Ae::optimiser() {
 
 		// On effectue la mutation d'un enfant avec une probabilit� "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
-			fils1->inversion_sequence_genes();
+			fils1->echange_2_genes_consecutifs();
 
 		// On effectue la mutation de l'autre enfant avec une probabilit� "taux_mutation"
 		if (Random::aleatoire(1000) / 1000.0 < taux_mutation)
-			fils2->inversion_sequence_genes();
-
+			fils2->echange_2_genes_consecutifs();
 		// �valuation des deux nouveaux individus g�n�r�s
 		fils1->evaluer(les_distances);
 		fils2->evaluer(les_distances);
@@ -139,41 +138,50 @@ void Ae::croisement1X(chromosome* parent1, chromosome* parent2,
 //                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
 void Ae::croisement2X(chromosome* parent1, chromosome* parent2,
 	chromosome* enfant_s1, chromosome* enfant_s2) {
-	/*
-	P1 = 82 | 3654 | 719
-	P2 = 45 | 2187 | 693
+	int nb_genes = parent1->taille;
 
-	->
-	C1 = 82 | 4563 | 719
-	C2 = 45 | 8271 | 693
-	*/
+	int* odre_parent1 = new int[nb_genes];
+	int* odre_parent2 = new int[nb_genes];
 
-	int coupe1 = Random::aleatoire(taille_chromosome-1);
-	int coupe2 = Random::aleatoire(taille_chromosome-2);
-	if (coupe1 == coupe2 && coupe2 < taille_chromosome - 1) 
-		coupe2++;
-
-	if (coupe2 > coupe1) {
-		int tmp = coupe1;
-		coupe1 = coupe2;
-		coupe2 = tmp;
+	for (int i = 0; i < nb_genes; i++) {
+		odre_parent1[parent1->genes[i]] = i;
+		odre_parent2[parent2->genes[i]] = i;
 	}
 
-		// Copy segments from parents to children
-	for (int i = 0; i < taille_chromosome; i++) {
-		if (i <= coupe2 || i > coupe1) {
-			enfant_s1->genes[i] = parent1->genes[i];
-			enfant_s2->genes[i] = parent2->genes[i];
-		} else {
-			enfant_s1->genes[i] = parent2->genes[i];
-			enfant_s2->genes[i] = parent1->genes[i];
+	// 1) l'op
+	// �rateur 2X choisit de mani�re al�atoire 2 points de croisement
+	int point1 = Random::aleatoire(nb_genes);
+	int point2 = Random::aleatoire(nb_genes);
+
+	while (point1 == point2)
+		point2 = Random::aleatoire(nb_genes);
+	
+	if (point1 > point2) {
+		int temp = point1;
+		point1 = point2;
+		point2 = temp;
+	}
+
+	// 2) l'op�rateur 2X recopie le d�but du parent 1 au d�but de l'enfant 1
+	//                        et le d�but du parent 2 au d�but de l'enfant 2.
+
+	enfant_s1->copier(parent1);
+	enfant_s2->copier(parent2);
+
+	// 3) l'op�rateur 1X compl�te l'enfant 1 avec les g�nes manquant en les pla�ant dans l'ordre du parent 2
+	//                         et l'enfant 2 avec les g�nes manquant en les pla�ant dans l'ordre du parent 1.
+	for (int k = point1 + 1; k < point2; k++) {
+		for (int l = k + 1; l < point2; l++) {
+			if (odre_parent2[enfant_s1->genes[k]] > odre_parent2[enfant_s1->genes[l]])
+				enfant_s1->echange_2_genes(k, l);
+			if (odre_parent1[enfant_s2->genes[k]] > odre_parent1[enfant_s2->genes[l]])
+				enfant_s2->echange_2_genes(k, l);
 		}
 	}
 
+	delete[] odre_parent1;
+	delete[] odre_parent2;
 }
-
-void Ae::croisement2LOX(chromosome* parent1, chromosome* parent2,
-	chromosome* enfant_s1, chromosome* enfant_s2) {}
 
 void Ae::constuction_distance(char* nom_fichier) {
 	les_distances = new int* [taille_chromosome];

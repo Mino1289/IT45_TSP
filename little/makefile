@@ -1,11 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -pedantic -O3
 
-OPENMP ?= 0
-
-ifeq ($(OPENMP), 1)
-	CFLAGS += -DOPENMP -fopenmp
-endif
 
 all: little
 
